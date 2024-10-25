@@ -11,7 +11,7 @@
 }
 
 .post-card__main {
-	@apply flex flex-col md:w-1/2 w-full p-6;
+	@apply flex flex-col md:w-1/2 w-full p-1 md:p-6;
 }
 
 .post-card__header {

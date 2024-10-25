@@ -2,6 +2,9 @@ import React from 'react';
 import '../../styles/PostCard.css';
 
 export default function PostCard({ post }) {
+	const date = post.createdAt.split('T')[0];
+	const time = post.createdAt.split('T')[1];
+	const formatedTime = time.substring(0, time.indexOf('.'));
 	return (
 		<div className='post-card'>
 			{/* Frame ảnh */}
@@ -29,8 +32,8 @@ export default function PostCard({ post }) {
 							{post.author.username}
 						</div>
 						<div className='flex gap-3 text-gray-500'>
-							<span className='text-sm'>{post.createdAt}</span>
-							<span className='text-sm'>{post.createdAt}</span>
+							<span className='text-sm'>{date}</span>
+							<span className='text-sm'>{formatedTime}</span>
 						</div>
 					</div>
 				</div>
