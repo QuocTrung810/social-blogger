@@ -77,12 +77,12 @@ const login = async (req, res) => {
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return res
-				.status(StatusCode.clientErrors.UNAUTHORIZED)
+				.status(StatusCode.clientErrors.NOT_FOUND)
 				.json(
 					ApiResponse.error(
 						'Invalid password',
 						null,
-						StatusCode.clientErrors.UNAUTHORIZED
+						StatusCode.clientErrors.NOT_FOUND
 					)
 				);
 		}
@@ -221,7 +221,7 @@ const getUserById = async (req, res) => {
 
 const refresh = async (req, res) => {
 	try {
-		const refreshToken = req.cookies.refreshToken; // Sửa lại từ req.cookie thành req.cookies
+		const refreshToken = req.cookies.refreshToken;
 
 		if (!refreshToken) {
 			return res

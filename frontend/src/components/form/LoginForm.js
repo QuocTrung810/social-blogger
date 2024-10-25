@@ -75,9 +75,13 @@ export default function LoginForm({ toast }) {
 	};
 
 	const handleToastClose = async () => {
-		const { data } = await api.get('/users/user-profile');
-		auth.setIsAuthorized(data);
-		navigate('/');
+		try {
+			const { data } = await api.get('/users/user-profile');
+			auth.setIsAuthorized(data);
+			navigate('/');
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	const handleSubmitForm = (e) => {

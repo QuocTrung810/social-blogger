@@ -46,12 +46,13 @@ export default function RegisterForm({ toast }) {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 		try {
 			const response = await api.post('/users/register', {
+				username: values.username,
 				email: values.email,
 				password: values.password,
 			});
 			const resData = response.data;
 			if (resData.success) {
-				// Login success
+				// Register success
 				toast.update(id, {
 					render: 'Register Successful!',
 					type: 'success',
@@ -60,23 +61,26 @@ export default function RegisterForm({ toast }) {
 					closeOnClick: true,
 					onClose: () => handleToastClose(),
 				});
+			}
+		} catch (err) {
+			if (err.status === 404) {
+				const errRes = err.response;
+				toast.update(id, {
+					render: `Error: ${errRes.data.message}`,
+					type: 'error',
+					isLoading: false,
+					autoClose: 5000,
+					closeOnClick: true,
+				});
 			} else {
 				toast.update(id, {
-					render: `Error: ${resData.message}`,
+					render: `Error: Server busy, try again`,
 					type: 'error',
 					isLoading: false,
 					autoClose: 5000,
 					closeOnClick: true,
 				});
 			}
-		} catch (err) {
-			toast.update(id, {
-				render: `Error: Server busy, try again`,
-				type: 'error',
-				isLoading: false,
-				autoClose: 5000,
-				closeOnClick: true,
-			});
 		}
 	};
 
