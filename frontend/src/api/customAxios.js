@@ -7,13 +7,20 @@ const api = axios.create({
 	baseURL: config.END_POINT_API,
 	withCredentials: true, // Cho phép gửi cookie trong các request
 	// Cấu hình content-type mặc định là x-www-form-urlencoded
-	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
-	},
+	headers: {},
 	// Tự động transform data thành x-www-form-urlencoded format
 	transformRequest: [
-		function (data) {
-			return qs.stringify(data);
+		function (data, headers) {
+			// Kiểm tra nếu data là instance của FormData thì không cần stringify
+			if (data instanceof FormData) {
+				// Khi sử dụng FormData, trình duyệt sẽ tự động thêm header Content-Type là multipart/form-data
+				delete headers['Content-Type']; // Để trình duyệt tự thiết lập 'Content-Type'
+				return data; // Trả về dữ liệu dạng FormData mà không cần biến đổi
+			} else {
+				// Mặc định chuyển đổi các object thành x-www-form-urlencoded
+				headers['Content-Type'] = 'application/x-www-form-urlencoded';
+				return qs.stringify(data);
+			}
 		},
 	],
 });

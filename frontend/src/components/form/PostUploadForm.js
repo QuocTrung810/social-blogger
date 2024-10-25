@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import api from '../../api/customAxios';
+import config from '../../config';
 
 const CreatePostModal = ({ isOpen, onClose }) => {
 	const [formData, setFormData] = useState({
@@ -14,10 +16,10 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 	const [imagePreview, setImagePreview] = useState(null);
 
 	const categories = [
-		{ id: 1, name: 'Technology' },
-		{ id: 2, name: 'Lifestyle' },
-		{ id: 3, name: 'Travel' },
-		{ id: 4, name: 'Food' },
+		{ id: 'Technology', name: 'Technology' },
+		{ id: 'Lifestyle', name: 'Lifestyle' },
+		{ id: 'Travel', name: 'Travel' },
+		{ id: 'Food', name: 'Food' },
 	];
 
 	const handleChange = (e) => {
@@ -73,12 +75,25 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 		return newErrors;
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const validationErrors = validateForm();
 		if (Object.keys(validationErrors).length === 0) {
-			console.log('Form submitted:', formData);
-			onClose();
+			const submitFormData = new FormData();
+			submitFormData.append('title', formData.title);
+			submitFormData.append('subtitle', formData.subtitle);
+			submitFormData.append('content', formData.content);
+			submitFormData.append('category', formData.category);
+			submitFormData.append('file-upload', formData.image);
+			try {
+				const response = await api.post(
+					`${config.END_POINT_API}/posts/create`,
+					submitFormData
+				);
+				if (response.data.success) {
+					onClose();
+				}
+			} catch (err) {}
 		} else {
 			setErrors(validationErrors);
 		}

@@ -10,6 +10,7 @@ import Blog from './components/layout/MainLayout/Blog';
 import Podcast from './components/layout/MainLayout/Podcast';
 import About from './components/layout/MainLayout/About';
 
+import ScrollToTop from './components/feature/ScrollToTop';
 import { AppContext } from './context/AppContext';
 import ProtectRoute from './routes/ProtectRoute';
 
@@ -17,6 +18,7 @@ function App() {
 	const auth = useContext(AppContext);
 	return (
 		<BrowserRouter>
+			<ScrollToTop />
 			<Routes>
 				<Route
 					path='/'

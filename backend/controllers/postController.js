@@ -4,7 +4,10 @@ const StatusCode = require('../utils/statusCode');
 
 const getAllPosts = async (req, res) => {
 	try {
-		const posts = await postModel.find().lean();
+		const posts = await postModel
+			.find()
+			.populate('author', '_id username email avatar')
+			.lean();
 		return res
 			.status(StatusCode.successResponses.OK)
 			.json(ApiResponse.success('Data fetched successfully', posts));
@@ -15,4 +18,25 @@ const getAllPosts = async (req, res) => {
 	}
 };
 
-module.exports = { getAllPosts };
+const getPostById = (req, res) => {};
+
+const createPost = async (req, res) => {
+	const postInfo = req.body;
+	const authorId = req.user.id;
+	postInfo.author = authorId;
+	if (res.imageUrl)
+		postInfo.imageurl = `${process.env.SERVER_URL}/${res.imageUrl}`;
+	const newPost = new postModel(postInfo);
+	try {
+		await newPost.save();
+		return res
+			.status(StatusCode.successResponses.CREATED)
+			.json(ApiResponse.success('Created'));
+	} catch (err) {
+		return res
+			.status(StatusCode.serverErrors.INTERNAL_SERVER_ERROR)
+			.json(ApiResponse.error('Something went wrong'));
+	}
+};
+
+module.exports = { getAllPosts, getPostById, createPost };

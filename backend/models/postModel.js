@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
 		require: true,
 		minLength: 1,
 	},
-	subTitle: {
+	subtitle: {
 		type: String,
 		minLength: 1,
 	},
@@ -19,9 +19,10 @@ const postSchema = new mongoose.Schema({
 		require: true,
 		minLength: 1,
 	},
-	imageUrl: {
+	imageurl: {
 		type: String,
-		default: 'http://localhost:5050/public/images/posts/default-image.jpg',
+		default:
+			'http://localhost:5050/api/public/images/posts/default-image.jpg',
 	},
 	author: {
 		type: mongoose.Schema.Types.ObjectId,

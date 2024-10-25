@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/PostCard.css';
 
-export default function PostCard() {
+export default function PostCard({ post }) {
 	return (
 		<div className='post-card'>
 			{/* Frame ảnh */}
@@ -9,7 +9,7 @@ export default function PostCard() {
 				<img
 					className='post-card__image'
 					alt='post'
-					src='http://localhost:5050/public/images/posts/default-image.jpg'
+					src={post.imageurl}
 				/>
 			</div>
 
@@ -21,14 +21,16 @@ export default function PostCard() {
 						<img
 							className='w-full h-full object-cover rounded-full'
 							alt='post'
-							src='http://localhost:5050/public/images/posts/default-image.jpg'
+							src={post.author.avatar}
 						/>
 					</div>
 					<div>
-						<div className='text-sm font-medium'>Admin</div>
+						<div className='text-sm font-medium'>
+							{post.author.username}
+						</div>
 						<div className='flex gap-3 text-gray-500'>
-							<span className='text-sm'>T2 12 May, 2012</span>
-							<span className='text-sm'>11:20</span>
+							<span className='text-sm'>{post.createdAt}</span>
+							<span className='text-sm'>{post.createdAt}</span>
 						</div>
 					</div>
 				</div>
@@ -36,12 +38,9 @@ export default function PostCard() {
 				{/* Body - thêm padding left và right */}
 				<div className='post-card__body'>
 					<h2 className='text-2xl font-semibold mb-2'>
-						PLAYING WITH PATTERNS
+						{post.title}
 					</h2>
-					<p className='text-gray-600 text-sm'>
-						Create a blog post subtitle that summarizes your post in
-						a few short, punchy sentences...
-					</p>
+					<p className='text-gray-600 text-sm'>{post.subtitle}</p>
 				</div>
 
 				{/* Footer - thêm border top và padding */}
@@ -49,14 +48,14 @@ export default function PostCard() {
 					<div className='flex items-center justify-between text-gray-500 text-sm'>
 						<div className='flex items-center gap-4'>
 							<span className='flex items-center gap-1'>
-								<span>0</span> views
+								<span>{post.views}</span> views
 							</span>
 							<span className='flex items-center gap-1'>
 								<span>0</span> comments
 							</span>
 						</div>
 						<div className='flex items-center gap-1'>
-							<span>13</span>
+							<span>{post.like}</span>
 							<svg
 								className='w-4 h-4 text-red-500'
 								fill='none'

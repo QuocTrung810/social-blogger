@@ -16,7 +16,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const app = express();
 
 // * MIDDLEWARES
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/api/public', express.static(path.join(__dirname, 'public')));
 // Working with body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
