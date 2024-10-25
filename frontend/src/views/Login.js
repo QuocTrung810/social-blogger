@@ -1,24 +1,14 @@
-import React, { useContext } from 'react';
-import { AppContext } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import LoginForm from '../components/form/LoginForm';
+import { ToastContainer, toast } from 'react-toastify';
+import '../styles/LoginPage.css';
 
 export default function Login() {
-	const auth = useContext(AppContext);
-	const navigate = useNavigate();
-	const handleLogin = () => {
-		auth.setIsAuthenticated(true);
-		localStorage.setItem('auth', true);
-		navigate('/');
-	};
-
 	return (
-		<>
-			<button
-				className='p-2 border rounded active:bg-slate-200'
-				onClick={handleLogin}
-			>
-				Login
-			</button>
-		</>
+		<div className='login__page'>
+			<h1 className='login-page__header'>Social Blogger</h1>
+			<LoginForm toast={toast} />
+			<ToastContainer />
+		</div>
 	);
 }

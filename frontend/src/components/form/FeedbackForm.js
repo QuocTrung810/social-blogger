@@ -14,6 +14,7 @@ export default function FeedbackForm() {
 	});
 
 	const handleSendFeedback = (e) => {
+		e.preventDefault();
 		if (values.email === '') {
 			setErrors((prev) => {
 				return {
@@ -21,6 +22,7 @@ export default function FeedbackForm() {
 					email: { isError: true, errMsg: 'Please enter your email' },
 				};
 			});
+			return;
 		} else if (values.feedback === '') {
 			setErrors((prev) => {
 				return {
@@ -31,7 +33,8 @@ export default function FeedbackForm() {
 					},
 				};
 			});
-		} else e.preventDefault();
+			return;
+		}
 	};
 
 	const handleChangeValue = (e, type) => {
@@ -60,15 +63,15 @@ export default function FeedbackForm() {
 
 	return (
 		<form>
-			<div className='form__group'>
+			<div className='feedback-form__group'>
 				<label
-					className='form__label'
+					className='feedback-form__label'
 					htmlFor='email'
 				>
 					Email:
 				</label>
 				<input
-					className='form__control'
+					className='feedback-form__control'
 					type='email'
 					id='email'
 					placeholder='abc@domain.com'
@@ -76,7 +79,7 @@ export default function FeedbackForm() {
 					onChange={(e) => handleChangeValue(e, 'email')}
 				/>
 				{errors.email.isError ? (
-					<div className='form__valid'>
+					<div className='feedback-form__valid'>
 						<RiErrorWarningLine />
 						{errors.email.errMsg}
 					</div>
@@ -84,22 +87,22 @@ export default function FeedbackForm() {
 					''
 				)}
 			</div>
-			<div className='form__group'>
+			<div className='feedback-form__group'>
 				<label
-					className='form__label'
+					className='feedback-form__label'
 					htmlFor='feedback'
 				>
 					Feedback:
 				</label>
 				<textarea
-					className='form__control'
+					className='feedback-form__control'
 					id='feedback'
 					rows={3}
 					value={values.feedback}
 					onChange={(e) => handleChangeValue(e, 'textarea')}
 				/>
 				{errors.feedback.isError ? (
-					<div className='form__valid'>
+					<div className='feedback-form__valid'>
 						<RiErrorWarningLine />
 						{errors.feedback.errMsg}
 					</div>
@@ -107,7 +110,7 @@ export default function FeedbackForm() {
 					''
 				)}
 			</div>
-			<div className='form__group'>
+			<div className='feedback-form__group'>
 				<button onClick={handleSendFeedback}>Send</button>
 			</div>
 		</form>

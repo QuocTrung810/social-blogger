@@ -2,22 +2,22 @@
 	@apply mt-4 md:mt-0;
 }
 
-.form__group {
+.feedback-form__group {
 	@apply w-full px-8 mb-3;
 }
 
-.form__label {
+.feedback-form__label {
 	@apply block text-sm mb-1;
 }
 
-.form__control {
+.feedback-form__control {
 	@apply w-full p-2 bg-black border-slate-300 border-2 rounded-md resize-none;
 }
 
-.form__valid {
+.feedback-form__valid {
 	@apply flex items-center text-xs text-red-500;
 }
 
-.form__group button {
+.feedback-form__group button {
 	@apply w-full p-2 rounded-md bg-black border-slate-300 border-2 active:bg-white active:text-black;
 }
