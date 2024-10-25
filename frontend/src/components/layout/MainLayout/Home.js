@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import Banner from '../../ui/Banner';
-import Modal from '../../ui/Modal';
+import Banner from '../../feature/Banner';
+import Modal from '../../feature/Modal';
+import PostList from '../../ui/PostList';
 
 export default function Home() {
 	const [isShow, setIsShow] = useState(false);
 	return (
 		<>
 			<Banner />
+			<PostList />
 			<Modal
 				isShow={isShow}
 				setIsShow={setIsShow}
