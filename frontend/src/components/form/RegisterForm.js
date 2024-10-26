@@ -63,7 +63,7 @@ export default function RegisterForm({ toast }) {
 				});
 			}
 		} catch (err) {
-			if (err.status === 404) {
+			if (err.status === 401) {
 				const errRes = err.response;
 				toast.update(id, {
 					render: `Error: ${errRes.data.message}`,

@@ -18,7 +18,7 @@ export default function Blog() {
 			<PostList />
 			<button
 				onClick={handlePopupModal}
-				className='fixed left-[80%] top-[85%] md:left-[85%] md:top-[85%] rounded-full p-4 bg-black text-white hover:bg-gray-300 hover:text-gray-600 transition-colors'
+				className='fixed left-[80%] top-[85%] md:left-[85%] md:top-[85%] rounded-full p-4 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-black transition-colors'
 			>
 				<FaPlus />
 			</button>

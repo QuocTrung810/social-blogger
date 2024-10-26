@@ -13,20 +13,26 @@ export default function PostList({ number }) {
 	return (
 		<div className='post-list'>
 			{number
-				? appContext.posts.slice(0, number).map((post) => {
+				? appContext.posts
+						.toReversed()
+						.slice(0, number)
+						.map((post) => {
+							return (
+								<PostCard
+									key={post._id}
+									post={post}
+									clickEvent={() =>
+										handleRedirectToDetail(post)
+									}
+								/>
+							);
+						})
+				: appContext.posts.toReversed().map((post) => {
 						return (
 							<PostCard
 								key={post._id}
 								post={post}
 								clickEvent={() => handleRedirectToDetail(post)}
-							/>
-						);
-				  })
-				: appContext.posts.map((post) => {
-						return (
-							<PostCard
-								key={post._id}
-								post={post}
 							/>
 						);
 				  })}

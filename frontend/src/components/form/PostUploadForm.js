@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
 import { X } from 'lucide-react';
 import api from '../../api/customAxios';
 import config from '../../config';
@@ -14,6 +15,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 
 	const [errors, setErrors] = useState({});
 	const [imagePreview, setImagePreview] = useState(null);
+	const auth = useContext(AppContext);
 
 	const categories = [
 		{ id: 'Technology', name: 'Technology' },
@@ -91,6 +93,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 					submitFormData
 				);
 				if (response.data.success) {
+					auth.getPosts();
 					onClose();
 				}
 			} catch (err) {}
