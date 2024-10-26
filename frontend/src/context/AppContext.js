@@ -4,7 +4,7 @@ import api from '../api/customAxios';
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
-	const [isAuthorized, setIsAuthorized] = useState();
+	const [isAuthorized, setIsAuthorized] = useState(null);
 	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
@@ -23,7 +23,7 @@ export function AppProvider({ children }) {
 				const { data } = await api.get('/users/user-profile');
 				setIsAuthorized(data);
 			} catch (err) {
-				if (err.status === 401) {
+				if (err.response?.status === 401) {
 					setIsAuthorized(null);
 				}
 			}

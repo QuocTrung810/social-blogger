@@ -222,7 +222,7 @@ const getUserById = async (req, res) => {
 const refresh = async (req, res) => {
 	try {
 		const refreshToken = req.cookies.refreshToken;
-
+		console.log(refreshToken);
 		if (!refreshToken) {
 			return res
 				.status(StatusCode.clientErrors.UNAUTHORIZED)

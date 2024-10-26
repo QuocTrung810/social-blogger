@@ -1,12 +1,20 @@
 import React from 'react';
 import '../../styles/PostCard.css';
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, clickEvent }) {
 	const date = post.createdAt.split('T')[0];
 	const time = post.createdAt.split('T')[1];
 	const formatedTime = time.substring(0, time.indexOf('.'));
+
+	const handleLikeEvent = (e) => {
+		e.stopPropagation();
+	};
+
 	return (
-		<div className='post-card'>
+		<div
+			className='post-card'
+			onClick={clickEvent}
+		>
 			{/* Frame ảnh */}
 			<div className='post-card__frame'>
 				<img
@@ -60,10 +68,11 @@ export default function PostCard({ post }) {
 						<div className='flex items-center gap-1'>
 							<span>{post.like}</span>
 							<svg
-								className='w-4 h-4 text-red-500'
+								className='w-6 h-6 text-red-500'
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
+								onClick={handleLikeEvent}
 							>
 								<path
 									strokeLinecap='round'

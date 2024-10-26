@@ -13,6 +13,7 @@ import About from './components/layout/MainLayout/About';
 import ScrollToTop from './components/feature/ScrollToTop';
 import { AppContext } from './context/AppContext';
 import ProtectRoute from './routes/ProtectRoute';
+import BlogDetail from './components/layout/MainLayout/BlogDetail';
 
 function App() {
 	const auth = useContext(AppContext);
@@ -43,6 +44,10 @@ function App() {
 								<About />
 							</ProtectRoute>
 						}
+					/>
+					<Route
+						path='/post/:id'
+						element={<BlogDetail />}
 					/>
 				</Route>
 				<Route

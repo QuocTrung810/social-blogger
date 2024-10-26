@@ -18,7 +18,21 @@ const getAllPosts = async (req, res) => {
 	}
 };
 
-const getPostById = (req, res) => {};
+const getPostById = async (req, res) => {
+	const id = req.params.id;
+	try {
+		const post = await postModel
+			.findById(id)
+			.populate('author', 'username avatar -_id');
+		res.status(StatusCode.successResponses.OK).json(
+			ApiResponse.success('Success', post)
+		);
+	} catch (err) {
+		res.status(StatusCode.successResponses.OK).json(
+			ApiResponse.error('Something went wrong')
+		);
+	}
+};
 
 const createPost = async (req, res) => {
 	const postInfo = req.body;
