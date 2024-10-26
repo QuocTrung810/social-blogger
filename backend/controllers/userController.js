@@ -119,7 +119,7 @@ const logout = async (req, res) => {
 		}
 		// Xóa cả 2 cookies
 		res.clearCookie('accessToken', { path: '/' });
-		res.clearCookie('refreshToken', { path: '/auth' });
+		res.clearCookie('refreshToken', { path: '/' });
 
 		return res
 			.status(StatusCode.successResponses.OK)
