@@ -9,7 +9,9 @@ services:
             - '27017:27017'
         volumes:
             - ./data/db:/data/db
-            - ./database:/data/import # Volume chứa file JSON
+            - ./database:/data/import # Gắn thư mục chứa file JSON từ máy cục bộ
+        environment:
+            MONGO_INITDB_DATABASE: Blog-Page
 
     # Express Backend Service
     express:
@@ -22,9 +24,12 @@ services:
         depends_on:
             - mongodb
         environment:
-            - MONGO_URI=mongodb://mongodb:27017/Blog-Page
-            - CLIENT_URL=http://localhost:3000
             - SERVER_PORT=5050
+            - MONGODB_URI=mongodb://mongodb:27017/Blog-Page
+            - SECRET_KEY_ACCESS_TOKEN=secret-key-access-token
+            - SECRET_KEY_REFRESH_TOKEN=secret-key-refresh-token
+            - CLIENT_URL=http://localhost:3000
+            - SERVER_URL=http://localhost:5050/api
 
     # React Frontend Service
     react:
@@ -36,3 +41,5 @@ services:
             - ./frontend:/app
         depends_on:
             - express
+        environment:
+            - REACT_APP_API_URL=http://localhost:5050/api

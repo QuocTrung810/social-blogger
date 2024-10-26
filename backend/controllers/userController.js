@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const StatusCode = require('../utils/statusCode');
 const ApiResponse = require('../utils/apiResponse');
