@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 	avatar: {
 		type: String,
 		default:
-			'http://localhost:5050/public/images/avatars/default-avatar.jpg',
+			'http://localhost:5050/api/public/images/avatars/default-avatar.jpg',
 	},
 	role: {
 		type: String,
