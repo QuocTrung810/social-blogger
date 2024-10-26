@@ -43,6 +43,7 @@ app.use((req, res, next) => {
 // * ROUTER
 app.use('/api/users', require('./routers/userRouter'));
 app.use('/api/posts', require('./routers/postRouter'));
+app.use('/api/comments', require('./routers/commentRouter'));
 app.use((req, res) => {
 	res.status(StatusCode.clientErrors.NOT_FOUND).json(
 		ApiResponse.error(
