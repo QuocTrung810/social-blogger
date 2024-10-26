@@ -23,12 +23,12 @@ module.exports = verifyToken = (req, res, next) => {
 		next();
 	} catch (err) {
 		return res
-			.status(StatusCode.clientErrors.UNAUTHORIZED)
+			.status(StatusCode.clientErrors.FORBIDDEN)
 			.json(
 				ApiResponse.error(
 					'Invalid token',
 					null,
-					StatusCode.clientErrors.UNAUTHORIZED
+					StatusCode.clientErrors.FORBIDDEN
 				)
 			);
 	}

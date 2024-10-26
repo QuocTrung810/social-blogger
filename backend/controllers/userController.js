@@ -222,15 +222,14 @@ const getUserById = async (req, res) => {
 const refresh = async (req, res) => {
 	try {
 		const refreshToken = req.cookies.refreshToken;
-		console.log(refreshToken);
 		if (!refreshToken) {
 			return res
-				.status(StatusCode.clientErrors.UNAUTHORIZED)
+				.status(StatusCode.clientErrors.FORBIDDEN)
 				.json(
 					ApiResponse.error(
 						'Refresh token not found',
 						null,
-						StatusCode.clientErrors.UNAUTHORIZED
+						StatusCode.clientErrors.FORBIDDEN
 					)
 				);
 		}
