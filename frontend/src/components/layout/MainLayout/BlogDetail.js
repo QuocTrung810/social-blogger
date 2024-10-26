@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Heart, Eye, Send } from 'lucide-react';
 import api from '../../../api/customAxios';
+import Modal from '../../feature/Modal';
+import { AppContext } from '../../../context/AppContext';
 
 export default function BlogDetail() {
 	const { id } = useParams();
 	const [commentText, setCommentText] = useState('');
+	const [comments, setComments] = useState([]);
+	const [isShowModal, setIsShowModal] = useState(false);
+	const auth = useContext(AppContext);
 	const [postData, setPostData] = useState({
 		author: {
 			username: '',
@@ -19,42 +24,53 @@ export default function BlogDetail() {
 		views: 0,
 		createdAt: '',
 	});
-	useEffect(() => {
-		const getPost = async () => {
-			try {
-				const response = await api.get(`/posts/${id}`);
-				const data = response.data;
-				setPostData(data.data);
-			} catch (err) {}
-		};
-		getPost();
-	}, [id]);
-	// Sample comments data
-	const [comments] = useState([
-		{
-			id: 1,
-			author: 'Jane Cooper',
-			avatar: 'http://localhost:5050/api/public/images/avatars/default-avatar.jpg',
-			content:
-				'This is absolutely fantastic! The patterns really bring the space to life.',
-			timestamp: '2 hours ago',
-			likes: 5,
-		},
-		{
-			id: 2,
-			author: 'Alex Thompson',
-			avatar: 'http://localhost:5050/api/public/images/avatars/default-avatar.jpg',
-			content:
-				'Love the minimalist approach. Would love to see more content like this!',
-			timestamp: '5 hours ago',
-			likes: 3,
-		},
-	]);
 
-	const handleSubmitComment = (e) => {
+	// Chuyển các hàm fetch data vào useCallback
+	const getPost = useCallback(async () => {
+		try {
+			const response = await api.get(`/posts/${id}`);
+			const data = response.data;
+			setPostData(data.data);
+		} catch (err) {
+			// Xử lý lỗi ở đây
+			console.error('Error fetching post:', err);
+		}
+	}, [id]); // Thêm id vào dependency array
+
+	const getCommentsByPostId = useCallback(async () => {
+		try {
+			const response = await api.get(`/comments/post/${id}`);
+			const data = response.data;
+			console.log(data.data);
+			setComments(data.data);
+		} catch (err) {
+			// Xử lý lỗi ở đây
+			console.error('Error fetching comments:', err);
+		}
+	}, [id]); // Thêm id vào dependency array
+
+	useEffect(() => {
+		getPost();
+		getCommentsByPostId();
+	}, [id, getPost, getCommentsByPostId]);
+
+	const handleSubmitComment = async (e) => {
 		e.preventDefault();
 		// Handle comment submission logic here
-		setCommentText('');
+		if (commentText !== '' && auth.isAuthorized) {
+			try {
+				await api.post('/comments', {
+					postId: id,
+					content: commentText,
+				});
+				setCommentText('');
+				getCommentsByPostId();
+			} catch (err) {
+				console.log(err);
+			}
+		} else {
+			setIsShowModal(true);
+		}
 	};
 
 	return (
@@ -169,22 +185,25 @@ export default function BlogDetail() {
 							<div className='space-y-4'>
 								{comments.map((comment) => (
 									<div
-										key={comment.id}
+										key={comment._id}
 										className='flex space-x-4'
 									>
 										<img
-											src={comment.avatar}
-											alt={comment.author}
+											src={comment.userId.avatar}
+											alt={comment.userId.username}
 											className='w-10 h-10 rounded-full'
 										/>
 										<div className='flex-grow'>
 											<div className='bg-gray-50 p-4 rounded-lg'>
 												<div className='flex items-center justify-between mb-2'>
 													<h4 className='font-medium text-sm'>
-														{comment.author}
+														{
+															comment.userId
+																.username
+														}
 													</h4>
 													<span className='text-xs text-gray-500'>
-														{comment.timestamp}
+														{comment.createdAt}
 													</span>
 												</div>
 												<p className='text-sm text-gray-700'>
@@ -205,6 +224,11 @@ export default function BlogDetail() {
 					</div>
 				</div>
 			</div>
+
+			<Modal
+				isShow={isShowModal}
+				setIsShow={setIsShowModal}
+			/>
 		</div>
 	);
 }
