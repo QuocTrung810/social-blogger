@@ -224,49 +224,75 @@ const refresh = async (req, res) => {
 		const refreshToken = req.cookies.refreshToken;
 		if (!refreshToken) {
 			return res
-				.status(StatusCode.clientErrors.FORBIDDEN)
+				.status(StatusCode.clientErrors.UNAUTHORIZED)
 				.json(
 					ApiResponse.error(
 						'Refresh token not found',
 						null,
-						StatusCode.clientErrors.FORBIDDEN
+						StatusCode.clientErrors.UNAUTHORIZED
 					)
 				);
 		}
 
-		const decoded = jwt.verify(
-			refreshToken,
-			process.env.SECRET_KEY_REFRESH_TOKEN
-		);
-		const user = await userModel.findById(decoded.id);
+		try {
+			// Kiểm tra refresh token
+			const decoded = jwt.verify(
+				refreshToken,
+				process.env.SECRET_KEY_REFRESH_TOKEN
+			);
+			const user = await userModel.findById(decoded.id);
 
-		if (!user || user.refreshToken !== refreshToken) {
-			return res
-				.status(StatusCode.clientErrors.FORBIDDEN)
-				.json(
-					ApiResponse.error(
-						'Invalid refresh token',
-						null,
-						StatusCode.clientErrors.FORBIDDEN
-					)
-				);
+			if (!user || user.refreshToken !== refreshToken) {
+				// Xóa cookies nếu token không hợp lệ
+				res.clearCookie('accessToken');
+				res.clearCookie('refreshToken');
+				return res
+					.status(StatusCode.clientErrors.UNAUTHORIZED)
+					.json(
+						ApiResponse.error(
+							'Invalid refresh token',
+							null,
+							StatusCode.clientErrors.UNAUTHORIZED
+						)
+					);
+			}
+
+			const { accessToken, refreshToken: newRefreshToken } =
+				generateTokens(user._id);
+
+			user.refreshToken = newRefreshToken;
+			await user.save();
+
+			res.cookie('accessToken', accessToken, cookieConfig.accessToken);
+			res.cookie(
+				'refreshToken',
+				newRefreshToken,
+				cookieConfig.refreshToken
+			);
+
+			return res.status(StatusCode.successResponses.OK).json(
+				ApiResponse.success('Token refreshed successfully', {
+					accessToken,
+				})
+			);
+		} catch (jwtError) {
+			// Xử lý khi refresh token hết hạn
+			if (jwtError.name === 'TokenExpiredError') {
+				// Xóa cookies
+				res.clearCookie('accessToken');
+				res.clearCookie('refreshToken');
+				return res
+					.status(StatusCode.clientErrors.UNAUTHORIZED)
+					.json(
+						ApiResponse.error(
+							'Refresh token expired',
+							null,
+							StatusCode.clientErrors.UNAUTHORIZED
+						)
+					);
+			}
+			throw jwtError;
 		}
-
-		const { accessToken, refreshToken: newRefreshToken } = generateTokens(
-			user._id
-		);
-
-		user.refreshToken = newRefreshToken;
-		await user.save();
-
-		res.cookie('accessToken', accessToken, cookieConfig.accessToken);
-		res.cookie('refreshToken', newRefreshToken, cookieConfig.refreshToken);
-
-		return res.status(StatusCode.successResponses.OK).json(
-			ApiResponse.success('Token refreshed successfully', {
-				accessToken,
-			})
-		);
 	} catch (err) {
 		console.error('Refresh token error:', err);
 		return res

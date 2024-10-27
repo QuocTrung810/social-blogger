@@ -1,10 +1,9 @@
 import axios from 'axios';
-import config from '../config';
 import qs from 'qs';
 
 // Tạo axios với cấu hình cơ bản
 const api = axios.create({
-	baseURL: config.END_POINT_API,
+	baseURL: process.env.REACT_APP_END_POINT_API,
 	withCredentials: true, // Cho phép gửi cookie trong các request
 	// Cấu hình content-type mặc định là x-www-form-urlencoded
 	headers: {},
@@ -30,18 +29,35 @@ api.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
-		if (error.response.status === 401 && !originalRequest._retry) {
+
+		// Thêm kiểm tra URL để tránh lặp vô hạn
+		if (originalRequest.url === '/users/refresh') {
+			document.cookie =
+				'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			document.cookie =
+				'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			// Nếu chính request refresh token bị lỗi 401, chắc chắn logout
+			window.location.href = '/login';
+			return Promise.reject(error);
+		}
+
+		// Kiểm tra nếu là lỗi 401 và chưa thử refresh
+		if (error.response?.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 
 			try {
 				await api.post('/users/refresh');
 				return api(originalRequest);
-			} catch (err) {
-				// Refresh token expired - redirect to login
-				window.location.location = '/login';
-				return Promise.reject(error);
+			} catch (refreshError) {
+				document.cookie =
+					'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+				document.cookie =
+					'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+				window.location.href = '/login';
+				return Promise.reject(refreshError);
 			}
 		}
+
 		return Promise.reject(error);
 	}
 );

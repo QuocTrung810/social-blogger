@@ -10,6 +10,7 @@ const ApiResponse = require('./utils/apiResponse');
 
 // * ENVIRONMENT VARIABLES
 const SERVER_PORT = process.env.SERVER_PORT;
+const SERVER_HOST = process.env.HOST;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // * INITIALIZE APP
@@ -24,7 +25,8 @@ app.use(cookieParser());
 // Cấu hình CORS chi tiết
 app.use(
 	cors({
-		origin: process.env.CLIENT_URL, // Ví dụ: 'http://localhost:3000'
+		// Ví dụ: 'http://localhost:3000' hoặc các địa chỉ IP trong cùng mạng local
+		origin: [process.env.CLIENT_URL, 'http://192.168.1.*'],
 		credentials: true, // Cho phép gửi credentials (cookies, headers xác thực)
 		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
@@ -58,9 +60,11 @@ app.use((req, res) => {
 const main = async () => {
 	try {
 		await mongoose.connect(MONGODB_URI);
-		app.listen(SERVER_PORT, () => {
+		app.listen(SERVER_PORT, SERVER_HOST, () => {
 			console.clear();
-			console.log(`Server is running on http://localhost:${SERVER_PORT}`);
+			console.log(
+				`Server is running on http://${SERVER_HOST}:${SERVER_PORT}`
+			);
 		});
 	} catch (err) {
 		console.error(err);
