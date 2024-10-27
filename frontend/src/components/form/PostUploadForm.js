@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { X } from 'lucide-react';
 import api from '../../api/customAxios';
-import config from '../../config';
 
 const CreatePostModal = ({ isOpen, onClose }) => {
 	const [formData, setFormData] = useState({
@@ -89,7 +88,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 			submitFormData.append('file-upload', formData.image);
 			try {
 				const response = await api.post(
-					`${config.END_POINT_API}/posts/create`,
+					'/posts/create',
 					submitFormData
 				);
 				if (response.data.success) {

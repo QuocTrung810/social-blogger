@@ -1,10 +1,9 @@
 import axios from 'axios';
-import config from '../config';
 import qs from 'qs';
 
 // Tạo axios với cấu hình cơ bản
 const api = axios.create({
-	baseURL: config.END_POINT_API,
+	baseURL: process.env.REACT_APP_API_URL,
 	withCredentials: true, // Cho phép gửi cookie trong các request
 	// Cấu hình content-type mặc định là x-www-form-urlencoded
 	headers: {},

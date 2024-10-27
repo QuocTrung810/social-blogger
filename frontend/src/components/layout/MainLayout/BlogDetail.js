@@ -41,7 +41,6 @@ export default function BlogDetail() {
 		try {
 			const response = await api.get(`/comments/post/${id}`);
 			const data = response.data;
-			console.log(data.data);
 			setComments(data.data);
 		} catch (err) {
 			// Xử lý lỗi ở đây
